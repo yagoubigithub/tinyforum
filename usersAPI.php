@@ -36,4 +36,22 @@ function tinyf_users_get_by_id($uid){
  $user = $result[0];
 
 }
+
+function tinyf_users_add($name,$password,$email,$isadmin){
+    global $tf_handle;
+    if((empty($name))  || (empty($password)) || (empty($email)) || (empty($isadmin)))
+       return false;
+
+   $n_name = @mysqli_real_escape_string(strip_tags($name),$tf_handle);
+   $n_email = @mysqli_real_escape_string(strip_tags($email),$tf_handle);
+   $n_pass =@md5(@mysqli_real_escape_string(strip_tags($password),$tf_handle));
+   $n_isadmin =(int)$isadmin;
+   $query  = sprintf("INSERT INT `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
+   $qresult = @mysqli_query($query);
+   if(!$qresult)
+      return false;
+
+   return true;
+}
+
 ?>
