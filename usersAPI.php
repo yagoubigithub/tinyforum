@@ -1,7 +1,7 @@
 <?php
 
 
-/***********************************************************
+/***********************************************************/
 $tf_host='localhost';
 $tf_dbname='tinyforum';
 $tf_username = 'root';
@@ -20,7 +20,7 @@ if (!$tf_handle) {
 //@mysqli_close($tf_handle);
 mysqli_query($tf_handle,"SET NAMES 'utf8");
 
-****************************************************************/ 
+/****************************************************************/ 
 
 
 function tinyf_users_get($extra = ''){
@@ -65,10 +65,15 @@ function tinyf_users_add($name,$password,$email,$isadmin){
         echo "is empty";
         return false;
     }
-       
 
+
+    
+    $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
+    if(!filter_var(!$n_email,FILTER_VALIDATE_EMAIL) ){
+        return false;
+    }  
    $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
-   $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
+   
    $n_pass =md5(@mysqli_real_escape_string($tf_handle,strip_tags($password)));
    $n_isadmin =(int)$isadmin;
    $query  = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
@@ -121,7 +126,13 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
     }
     $fields =array();
     $query = 'UPDATE `users` SET ';
-
+    if((!empty($email))){
+        $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
+        if(!filter_var(!$n_email,FILTER_VALIDATE_EMAIL) ){
+            return false;
+        }  
+        $fields[count($fields)] = " `email` = '$n_email'";
+    }
     if((!empty($name))){
         $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
         $fields[count($fields)] = " `name` = '$n_name'";
@@ -130,10 +141,7 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         $n_pass = md5(mysqli_real_escape_string($tf_handle,strip_tags($password)));
         $fields[count($fields)] = " `password` = '$n_pass'";
     }
-    if((!empty($email))){
-        $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-        $fields[count($fields)] = " `email` = '$n_email'";
-    }
+    
     $fields[count($fields)] = " `isadmin` = '$isadmin'";
 
     $fcount =count($fields);
@@ -161,5 +169,5 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         return true;
     }
 }
-
+//tinyf_users_update(2,"hala",NULL,NULL,2);
 ?>
