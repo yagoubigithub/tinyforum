@@ -22,4 +22,18 @@ function tinyf_users_get($extra = ''){
 }
 $u=tinyf_users_get();
 die('OK');
+
+
+function tinyf_users_get_by_id($uid){
+    $id = (int)$uid;
+
+    if($id == 0)
+    return NULL;
+ $result = tinyf_users_get('WHERE id = '.$uid);
+ if($result == NULL){
+     return NULL;
+ }
+ $user = $result[0];
+
+}
 ?>
