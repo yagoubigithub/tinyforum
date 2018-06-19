@@ -2,24 +2,7 @@
 
 
 /***********************************************************/
-$tf_host='localhost';
-$tf_dbname='tinyforum';
-$tf_username = 'root';
-$tf_password = '';
-
-
-
-$tf_handle = mysqli_connect($tf_host, $tf_username, $tf_password,$tf_dbname);
-
-// Check connection
-if (!$tf_handle) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-//die('OK');
-//@mysqli_close($tf_handle);
-mysqli_query($tf_handle,"SET NAMES 'utf8");
-
+include('db.php');
 /****************************************************************/ 
 
 
@@ -61,7 +44,7 @@ function tinyf_users_get_by_id($uid){
 
 function tinyf_users_add($name,$password,$email,$isadmin){
     global $tf_handle;
-    if(!((empty($name))  || (empty($password)) || (empty($email)) || (empty($isadmin)))){
+    if((empty($name))  || (empty($password)) || (empty($email))){
         echo "is empty";
         return false;
     }
@@ -76,6 +59,10 @@ function tinyf_users_add($name,$password,$email,$isadmin){
    
    $n_pass =md5(@mysqli_real_escape_string($tf_handle,strip_tags($password)));
    $n_isadmin =(int)$isadmin;
+
+   if($n_isadmin !=0 && $n_isadmin !=1){
+       $n_isadmin =0;
+   }
    $query  = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
    $qresult = mysqli_query($tf_handle,$query);
    if(!$qresult){
