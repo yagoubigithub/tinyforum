@@ -58,5 +58,22 @@ function tinyf_users_add($name,$password,$email,$isadmin){
    return true;
 }
 
-tinyf_users_add("YAGOUBI","yagoubi10","yagoubi.aek.2@gmail.com",0);
+function tinyf_users_delete($uid){
+    global  $tf_handle;
+    $id= (int)$uid;
+    if($id == 0){
+        echo "is zero";
+        return false;
+
+    }
+    $query = sprintf("DELETE FROM `users` WHERE `id`= %d",$id);
+    $qresult = mysqli_query($tf_handle,$query);
+    if(!$qresult){
+        echo "is null";
+     return false;
+    }      
+     
+    return true;
+}
+tinyf_users_delete(1);
 ?>

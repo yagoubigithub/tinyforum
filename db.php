@@ -34,4 +34,5 @@ function tinyf_db_close(){
     global $tf_handle;
     mysqli_close($tf_handle);
 }
+
 ?>
