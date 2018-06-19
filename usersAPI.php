@@ -17,6 +17,9 @@ function tinyf_users_get($extra = ''){
     for($i = 0; i < $rcount; $i++){
        $users[count($users)]= @mysqli_fetch_object($qresult);
     }
-    
+    $mysqli_free_result($qresult);
+    return $users;
 }
+$u=tinyf_users_get();
+die('OK');
 ?>
