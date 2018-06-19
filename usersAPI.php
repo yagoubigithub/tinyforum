@@ -1,27 +1,24 @@
 <?php
-
 function tinyf_users_get($extra = ''){
     global $tf_handle;
     $query=sprintf("SELECT * FROM `users` %s",$extra);
-    $qresult=@mysqli_query($query);
+    $qresult=mysqli_query($tf_handle,$query);
 
     if(!$qresult)
     return NULL;
 
-    $rcount  = @mysqli_num_rows($qresult);
+    $rcount  = mysqli_num_rows($qresult);
 
     if($rcount == 0)
     return NULL;
 
     $users = array();
     for($i = 0; i < $rcount; $i++){
-       $users[count($users)]= @mysqli_fetch_object($qresult);
+       $users[count($users)]= mysqli_fetch_object($qresult);
     }
     $mysqli_free_result($qresult);
     return $users;
 }
-$u=tinyf_users_get();
-die('OK');
 
 
 function tinyf_users_get_by_id($uid){
@@ -39,19 +36,27 @@ function tinyf_users_get_by_id($uid){
 
 function tinyf_users_add($name,$password,$email,$isadmin){
     global $tf_handle;
-    if((empty($name))  || (empty($password)) || (empty($email)) || (empty($isadmin)))
-       return false;
+    if(!((empty($name))  || (empty($password)) || (empty($email)) || (empty($isadmin)))){
+        echo "is empty";
+        return false;
+    }
+       
 
-   $n_name = @mysqli_real_escape_string(strip_tags($name),$tf_handle);
-   $n_email = @mysqli_real_escape_string(strip_tags($email),$tf_handle);
-   $n_pass =@md5(@mysqli_real_escape_string(strip_tags($password),$tf_handle));
+   $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
+   $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
+   $n_pass =md5(@mysqli_real_escape_string($tf_handle,strip_tags($password)));
    $n_isadmin =(int)$isadmin;
-   $query  = sprintf("INSERT INT `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
-   $qresult = @mysqli_query($query);
-   if(!$qresult)
-      return false;
+   $query  = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
+   $qresult = mysqli_query($tf_handle,$query);
+   if(!$qresult){
+       echo "is null";
+    return false;
+   }
+      
+    echo "is added";
 
    return true;
 }
 
+tinyf_users_add("YAGOUBI","yagoubi10","yagoubi.aek.2@gmail.com",0);
 ?>

@@ -19,7 +19,7 @@ die('OK');
 */
 
 // Create connection
-$tf_handle = @mysqli_connect($tf_host, $tf_username, $tf_password,$tf_dbname);
+$tf_handle = mysqli_connect($tf_host, $tf_username, $tf_password,$tf_dbname);
 
 // Check connection
 if (!$tf_handle) {
@@ -28,10 +28,10 @@ if (!$tf_handle) {
 
 //die('OK');
 //@mysqli_close($tf_handle);
-@mysqli_query("SET NAMES 'utf8");
+mysqli_query($tf_handle,"SET NAMES 'utf8");
 
 function tinyf_db_close(){
     global $tf_handle;
-    @mysqli_close($tf_handle);
+    mysqli_close($tf_handle);
 }
 ?>
