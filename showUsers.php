@@ -11,6 +11,7 @@
 
 require_once('db.php');
 require_once('usersAPI.php');
+
 $users = tinyf_users_get();
 
 if($users == NULL)
@@ -26,7 +27,7 @@ die('No users in database');
     <?php
     for($i = 0;$i<$ucount;$i++){
         $user =$users[$i];
-        echo  "<li><a href='\userProfil.php?id=$user->id'>$user->name -- $user->email </a></li>";
+        echo  "<li><a href='userProfil.php?id=$user->id'>$user->name -- $user->email </a></li>";
     }
 
         

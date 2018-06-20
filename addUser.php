@@ -20,11 +20,11 @@
     <br>
 
     <label for="password">Password&ThickSpace;</label>
-    <input type="text" id="password" name="password">
+    <input type="password" id="password" name="password">
     <br>
 
     <label for="email">Email&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;</label>
-    <input type="text" id="email" name="email">
+    <input type="email" id="email" name="email">
     <br>
 
     <input type="submit" name="saveuser">

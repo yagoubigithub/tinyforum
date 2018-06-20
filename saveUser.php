@@ -16,7 +16,7 @@ if($user != NULL){
      tinyf_db_close();
     die('email Exist');
 }
-$result = tinyf_users_add($_POST['username'],$_POST['password'],$_POST['email'],0);
+$result = tinyf_users_add(trim($_POST['username']),trim($_POST['password']),trim($_POST['email']),0);
 tinyf_db_close();
 if($result){
     die('Success');
