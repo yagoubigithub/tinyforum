@@ -2,7 +2,7 @@
 
 
 /***********************************************************/
-include('db.php');
+
 /****************************************************************/ 
 
 
@@ -52,7 +52,8 @@ function tinyf_users_add($name,$password,$email,$isadmin){
 
     
     $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-    if(!filter_var(!$n_email,FILTER_VALIDATE_EMAIL) ){
+    if(!filter_var($n_email,FILTER_VALIDATE_EMAIL) ){
+        
         return false;
     }  
    $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
@@ -66,7 +67,7 @@ function tinyf_users_add($name,$password,$email,$isadmin){
    $query  = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
    $qresult = mysqli_query($tf_handle,$query);
    if(!$qresult){
-       echo "is null";
+     
     return false;
    }
       
