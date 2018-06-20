@@ -45,7 +45,21 @@ function tinyf_users_get_by_id($uid){
 function tinyf_users_get_by_name($name){
     global $tf_handle;
     $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
-    $result =tinyf_users_get(" WHERE `name` =($n_name'");
+    $result =tinyf_users_get(" WHERE `name` ='$n_name'");
+    if($result != NULL){
+        $user = $result[0];
+    }
+    else{
+        $user =NULL;
+    }
+    return $user;
+   
+}
+
+function tinyf_users_get_by_email($email){
+    global $tf_handle;
+    $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
+    $result =tinyf_users_get(" WHERE `email` ='$n_email'");
     if($result != NULL){
         $user = $result[0];
     }
@@ -59,7 +73,7 @@ function tinyf_users_get_by_name($name){
 function tinyf_users_add($name,$password,$email,$isadmin){
     global $tf_handle;
     if((empty($name))  || (empty($password)) || (empty($email))){
-        echo "is empty";
+        
         return false;
     }
 
@@ -85,8 +99,7 @@ function tinyf_users_add($name,$password,$email,$isadmin){
     return false;
    }
       
-    echo "is added";
-
+  
    return true;
 }
 
