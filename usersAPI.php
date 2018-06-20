@@ -42,6 +42,20 @@ function tinyf_users_get_by_id($uid){
 
 }
 
+function tinyf_users_get_by_name($name){
+    global $tf_handle;
+    $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
+    $result =tinyf_users_get(" WHERE `name` =($n_name'");
+    if($result != NULL){
+        $user = $result[0];
+    }
+    else{
+        $user =NULL;
+    }
+    return $user;
+   
+}
+
 function tinyf_users_add($name,$password,$email,$isadmin){
     global $tf_handle;
     if((empty($name))  || (empty($password)) || (empty($email))){
