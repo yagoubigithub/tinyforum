@@ -94,7 +94,7 @@ function tinyf_users_delete($uid){
 }
 
 
-function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$isadmin = 0){
+function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$isadmin = -1){
     global  $tf_handle;
     $id= (int)$uid;
     $n_isadmin = (int)$isadmin;
@@ -108,14 +108,15 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         return false;
     }
     if((empty($name))  && (empty($password)) && (empty($email)) && ($user->isadmin == $n_isadmin)){
-
+        echo "is empty";
         return false;
     }
     $fields =array();
     $query = 'UPDATE `users` SET ';
     if((!empty($email))){
         $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-        if(!filter_var(!$n_email,FILTER_VALIDATE_EMAIL) ){
+        if(!filter_var($n_email,FILTER_VALIDATE_EMAIL) ){
+           
             return false;
         }  
         $fields[count($fields)] = " `email` = '$n_email'";
@@ -128,7 +129,9 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         $n_pass = md5(mysqli_real_escape_string($tf_handle,strip_tags($password)));
         $fields[count($fields)] = " `password` = '$n_pass'";
     }
-    
+    if($n_isadmin == -1){
+        $n_isadmin=$user->isadmin;
+    }
     $fields[count($fields)] = " `isadmin` = '$isadmin'";
 
     $fcount =count($fields);
@@ -136,6 +139,7 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         $query .= $fields[0]." WHERE `id` = ".$id;
         $qresult = mysqli_query($tf_handle,$query);
         if(!$qresult){
+           
             return false;
         }else{
             return true;
@@ -149,12 +153,16 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         }
     }
     $query .= " WHERE `id` = ".$id;
+   
     $qresult = mysqli_query($tf_handle,$query);
     if(!$qresult){
+        
         return false;
     }else{
         return true;
     }
 }
-//tinyf_users_update(2,"hala",NULL,NULL,2);
+
+
+
 ?>
