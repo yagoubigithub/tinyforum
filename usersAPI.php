@@ -141,10 +141,10 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
     }
     $fields =array();
     $query = 'UPDATE `users` SET ';
-    if((!empty($email))){
+    if(!empty($email)){
         $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
         if(!filter_var($n_email,FILTER_VALIDATE_EMAIL) ){
-           
+           echo "email not valid";
             return false;
         }  
         $fields[count($fields)] = " `email` = '$n_email'";
@@ -160,12 +160,13 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
     if($n_isadmin == -1){
         $n_isadmin=$user->isadmin;
     }
-    $fields[count($fields)] = " `isadmin` = '$isadmin'";
+    $fields[count($fields)] = " `isadmin` = '$n_isadmin'";
 
     $fcount =count($fields);
     if($fcount == 1){
         $query .= $fields[0]." WHERE `id` = ".$id;
         $qresult = mysqli_query($tf_handle,$query);
+       
         if(!$qresult){
            
             return false;
@@ -181,7 +182,7 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
         }
     }
     $query .= " WHERE `id` = ".$id;
-   
+    
     $qresult = mysqli_query($tf_handle,$query);
     if(!$qresult){
         
