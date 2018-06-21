@@ -2,13 +2,13 @@
 
 
 /***********************************************************/
-
+//Forums API
 /****************************************************************/ 
 
 
-function tinyf_users_get($extra = ''){
+function tinyf_forums_get($extra = ''){
     global $tf_handle;
-    $query=sprintf("SELECT * FROM `users` %s",$extra);
+    $query=sprintf("SELECT * FROM `forums` %s",$extra);
     $qresult=mysqli_query($tf_handle,$query);
 
     if(!$qresult)
@@ -19,80 +19,43 @@ function tinyf_users_get($extra = ''){
     if($rcount == 0)
     return NULL;
 
-    $users = array();
+    $forums = array();
     for($i = 0; $i < $rcount; $i++){
-       $users[count($users)]= mysqli_fetch_object($qresult);
+       $forums[count($forums)]= mysqli_fetch_object($qresult);
     }
     mysqli_free_result($qresult);
-    return $users;
+    return $forums;
 }
 
 
-function tinyf_users_get_by_id($uid){
-    $id = (int)$uid;
+function tinyf_forums_get_by_id($fid){
+    $id = (int)$fid;
 
     if($id == 0)
     return NULL;
- $result = tinyf_users_get('WHERE id = '.$id);
+ $result = tinyf_forums_get('WHERE id = '.$id);
  if($result == NULL){
      return NULL;
  }
- $user = $result[0];
- return $user;
+ $forum = $result[0];
+ return $forum;
 
 }
 
-function tinyf_users_get_by_name($name){
-    global $tf_handle;
-    $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
-    $result =tinyf_users_get(" WHERE `name` ='$n_name'");
-    if($result != NULL){
-        $user = $result[0];
-    }
-    else{
-        $user =NULL;
-    }
-    return $user;
-   
-}
 
-function tinyf_users_get_by_email($email){
+function tinyf_forums_add($title,$desc){
     global $tf_handle;
-    $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-    $result =tinyf_users_get(" WHERE `email` ='$n_email'");
-    if($result != NULL){
-        $user = $result[0];
-    }
-    else{
-        $user =NULL;
-    }
-    return $user;
-   
-}
-
-function tinyf_users_add($name,$password,$email,$isadmin){
-    global $tf_handle;
-    if((empty($name))  || (empty($password)) || (empty($email))){
+    if((empty($title))  || (empty($desc)) ){
         
         return false;
     }
 
 
     
-    $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-    if(!filter_var($n_email,FILTER_VALIDATE_EMAIL) ){
-        
-        return false;
-    }  
-   $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
-   
-   $n_pass =md5(@mysqli_real_escape_string($tf_handle,strip_tags($password)));
-   $n_isadmin =(int)$isadmin;
-
-   if($n_isadmin !=0 && $n_isadmin !=1){
-       $n_isadmin =0;
-   }
-   $query  = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)",$n_name,$n_pass,$n_email,$n_isadmin);
+    $n_title = mysqli_real_escape_string($tf_handle,strip_tags($title));
+    $n_desc = mysqli_real_escape_string($tf_handle,strip_tags($desc));
+    
+   $query  = sprintf("INSERT INTO `forums` VALUES (NULL,'%s','%s')",$n_title,$n_desc);
    $qresult = mysqli_query($tf_handle,$query);
    if(!$qresult){
      
@@ -103,15 +66,16 @@ function tinyf_users_add($name,$password,$email,$isadmin){
    return true;
 }
 
-function tinyf_users_delete($uid){
+function tinyf_forums_delete($fid){
     global  $tf_handle;
-    $id= (int)$uid;
+    $id= (int)$fid;
     if($id == 0){
         echo "is zero";
         return false;
 
     }
-    $query = sprintf("DELETE FROM `users` WHERE `id`= %d",$id);
+   // tinyf_forums_delete_all_posts($fid);
+    $query = sprintf("DELETE FROM `forums` WHERE `id`= %d",$id);
     $qresult = mysqli_query($tf_handle,$query);
     if(!$qresult){
         echo "is null";
@@ -122,58 +86,35 @@ function tinyf_users_delete($uid){
 }
 
 
-function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$isadmin = -1){
+function tinyf_forums_update($fid,$title = NULL,$desc = NULL){
     global  $tf_handle;
-    $id= (int)$uid;
-    $n_isadmin = (int)$isadmin;
+    $id= (int)$fid;
+    
     if($id == 0){
         echo "is zero";
         return false;
     }
-    $user = tinyf_users_get_by_id($id);
-    if(!$user){
-        echo "no user with this id";
+    $forum = tinyf_forums_get_by_id($id);
+    if(!$forum){
+        echo "no forum with this id";
         return false;
     }
-    if((empty($name))  && (empty($password)) && (empty($email)) && ($user->isadmin == $n_isadmin)){
+    if((empty($title))  && (empty($desc))){
         echo "is empty";
         return false;
     }
     $fields =array();
-    $query = 'UPDATE `users` SET ';
-    if(!empty($email)){
-        $n_email = mysqli_real_escape_string($tf_handle,strip_tags($email));
-        if(!filter_var($n_email,FILTER_VALIDATE_EMAIL) ){
-           echo "email not valid";
-            return false;
-        }  
-        $fields[count($fields)] = " `email` = '$n_email'";
+    $query = 'UPDATE `forums` SET ';
+    if(!empty($title)){
+        $n_title = mysqli_real_escape_string($tf_handle,strip_tags($title)); 
+        $fields[count($fields)] = " `title` = '$n_title'";
     }
-    if((!empty($name))){
-        $n_name = mysqli_real_escape_string($tf_handle,strip_tags($name));
-        $fields[count($fields)] = " `name` = '$n_name'";
+    if((!empty($desc))){
+        $n_desc = mysqli_real_escape_string($tf_handle,strip_tags($desc));
+        $fields[count($fields)] = " `desc` = '$n_desc'";
     }
-    if((!empty($password))){
-        $n_pass = md5(mysqli_real_escape_string($tf_handle,strip_tags($password)));
-        $fields[count($fields)] = " `password` = '$n_pass'";
-    }
-    if($n_isadmin == -1){
-        $n_isadmin=$user->isadmin;
-    }
-    $fields[count($fields)] = " `isadmin` = '$n_isadmin'";
 
-    $fcount =count($fields);
-    if($fcount == 1){
-        $query .= $fields[0]." WHERE `id` = ".$id;
-        $qresult = mysqli_query($tf_handle,$query);
-       
-        if(!$qresult){
-           
-            return false;
-        }else{
-            return true;
-        }
-    }
+    
     for($i = 0;$i<$fcount;$i++){
         $query.=$fields[$i].' ';
         if($i != ($fcount -1 )){
@@ -192,6 +133,35 @@ function tinyf_users_update($uid,$name = NULL,$password = NULL,$email = NULL,$is
     }
 }
 
+function tinyf_forums_delete_all_posts($fid){
+    global  $tf_handle;
+    $id= (int)$fid;
+    if($id == 0){
+        echo "is zero";
+        return false;
 
+    }
+    $forum = tinyf_forums_get_by_id($id);
+    if(!$forum){
+        echo "no forum with this id";
+        return false;
+    }
+    $topicsq = sprintf('SELECT * FROM `posts` WHERE `fid` =  %d',$id);
+    $tresult =@mysqli_query($topicsq);
+    if(!$tresult){
+        return false;
+    }
+    $tcount =@mysqli_num_rows($tresult);
+    for($i =0;$i<$tcount;$i++){
+        $topic = mysqli_fetch_object($tresult);
+        mysqli_query('DELETE FROM `posts`WHERE `pid` = '.$topic->id);
+        mysqli_query('DELETE FROM `posts`WHERE `id` = '.$topic->id);
+
+    }
+    mysqli_free_result($tresult);
+
+
+
+}
 
 ?>
