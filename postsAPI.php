@@ -56,33 +56,23 @@ function tinyf_posts_get_reply_by_id()
     }
     $post = $result[0];
     return $post;
-
 }
-
-function tinyf_users_add($name, $password, $email, $isadmin)
-{
+function tinyf_posts_add($fid, $pid, $uid,$title, $content)
+{  
     global $tf_handle;
-    if ((empty($name)) || (empty($password)) || (empty($email))) {
 
+    $_fid = (int)$fid;
+    $_pid = (int)$pid;
+    $_uid = (int)$uid;
+    if ($_fid == 0 ) //|| $$_uid == 0)
+        return false;
+    if ((empty($title)) || (empty($content)) ) {
         return false;
     }
-
-
-
-    $n_email = mysqli_real_escape_string($tf_handle, strip_tags($email));
-    if (!filter_var($n_email, FILTER_VALIDATE_EMAIL)) {
-
-        return false;
-    }
-    $n_name = mysqli_real_escape_string($tf_handle, strip_tags($name));
-
-    $n_pass = md5(@mysqli_real_escape_string($tf_handle, strip_tags($password)));
-    $n_isadmin = (int)$isadmin;
-
-    if ($n_isadmin != 0 && $n_isadmin != 1) {
-        $n_isadmin = 0;
-    }
-    $query = sprintf("INSERT INTO `users` VALUES (NULL,'%s','%s','%s',%d)", $n_name, $n_pass, $n_email, $n_isadmin);
+    $n_title = mysqli_real_escape_string($tf_handle, strip_tags($title));
+    $n_content = mysqli_real_escape_string($tf_handle, strip_tags($content));
+    
+    $query = sprintf("INSERT INTO `posts` VALUES (NULL,%d,%d,%d,'%s','%s')", $_fid, $_pid, $_uid, $n_title,$n_content);
     $qresult = mysqli_query($tf_handle, $query);
     if (!$qresult) {
 
