@@ -75,7 +75,7 @@ function tinyf_forums_delete($fid){
         return false;
 
     }
-   // tinyf_forums_delete_all_posts($fid);
+   tinyf_forums_delete_all_posts($id);
     $query = sprintf("DELETE FROM `forums` WHERE `id`= %d",$id);
     $qresult = mysqli_query($tf_handle,$query);
     if(!$qresult){

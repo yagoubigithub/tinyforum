@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Show forums</title>
+    <title>Show Forums</title>
 </head>
 <body>
     <?php
@@ -27,7 +27,7 @@ die('No forums in database');
     <?php
     for($i = 0;$i<$fcount;$i++){
         $forum =$forums[$i];
-        echo  "<li><a href='forums.php?id=$forum->id'>$forum->title </a> <br> $forum->desc</li>";
+        echo  "<li><a href='forums.php?id=$forum->id'>$forum->title </a> <br> $forum->desc <a href='deleteForum.php?id=$forum->id'>delete </a> -- <a href='modifyForum.php?id=$forum->id'>update </a></li>";
     }
 
         
