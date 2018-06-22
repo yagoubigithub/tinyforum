@@ -8,12 +8,12 @@
         die("BAD access 2");
     }
     require_once('db.php');
-require_once('usersAPI.php');
+require_once('forumsAPI.php');
 
-$user = tinyf_users_get_by_id($_id);
+$forum = tinyf_forums_get_by_id($_id);
 tinyf_db_close();
-if($user == NULL){
-    die('Bad User ID');
+if($forum == NULL){
+    die('Bad Forum ID');
 }
     ?>
 <!DOCTYPE html>
@@ -22,7 +22,7 @@ if($user == NULL){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Modify:<?php echo $user->name; ?></title>
+    <title>Modify:<?php echo $forum->title; ?></title>
     <style>
     input{
         padding: 10px 10px 10px 10px;
@@ -32,20 +32,18 @@ if($user == NULL){
     </style>
 </head>
 <body>
-    <form action="updateUser.php?id=<?php echo $_id; ?>" method="POST">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username" value="<?php echo $user->name; ?>">
+    <form action="updateForum.php?id=<?php echo $_id; ?>" method="POST">
+    <label for="title">Forum Title</label>
+    <input type="text" id="title" name="title" value="<?php echo $forum->title; ?>">
     <br>
 
-    <label for="password">Password&ThickSpace;</label>
-    <input type="text" id="password" name="password" >
+   
+
+    <label for="desc">Description</label>
+    <input type="text" id="desc" name="desc" value="<?php echo $forum->desc; ?>">
     <br>
 
-    <label for="email">Email&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;</label>
-    <input type="email" id="email" name="email" value="<?php echo $user->email; ?>">
-    <br>
-
-    <input type="submit" name="saveuser" value="modify :<?php echo $user->name; ?>">
+    <input type="submit" name="modifyforum" value="modify :<?php echo $forum->title; ?>">
     </form>
 </body>
 </html>
