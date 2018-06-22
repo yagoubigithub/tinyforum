@@ -1,36 +1,25 @@
 <?php
 
-if(!isset($_POST['username']) || !isset($_POST['password']) || !isset($_POST['email'])){
+if(!isset($_POST['title']) || !isset($_POST['desc'])){
     die("Bad access");
  }
  require_once('db.php');
-require_once('usersAPI.php');
+require_once('forumsAPI.php');
 $_id = $_GET['id'];
-$user = tinyf_users_get_by_id($_id);
-$user1 = tinyf_users_get_by_name($_POST['username']);
-$user2 = tinyf_users_get_by_email($_POST['email']);
 
-if($user1 != NULL && $user1->id != $_id){
-    tinyf_db_close();
-    die('User Exist');
-}else{
-    if($user2 !=NULL && $user2->id != $_id){
-        tinyf_db_close();
-       die('email Exist');
-    }else{
-        $pass = trim($_POST['password']);
-        if(strlen($pass)  == 0){
-            $pass =NULL;
-        }
-        $result = tinyf_users_update($_id,trim($_POST['username']),$pass,trim($_POST['email']),$user->isadmin);
-        tinyf_db_close();
-        if($result){
-            die('Success');
-        }else{
-            die('Failure');
-        }
-
+    if($_id  == 0){
+        die("BAD access 2");
     }
+$user = tinyf_forums_get_by_id($_id);
+$result = tinyf_forums_update($_id,trim($_POST['title']),trim($_POST['desc']));
+
+tinyf_db_close();
+if($result){
+    die('Success');
+}else{
+    die('Failure');
 }
+
+
 
 ?>

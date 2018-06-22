@@ -116,9 +116,9 @@ function tinyf_forums_update($fid,$title = NULL,$desc = NULL){
     }
 
     
-    for($i = 0;$i<$fcount;$i++){
+    for($i = 0;$i<2;$i++){
         $query.=$fields[$i].' ';
-        if($i != ($fcount -1 )){
+        if($i != (1)){
             $query .= ' , ';
 
         }
