@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>addUser</title>
+    <title>add Forums</title>
     <style>
     input{
         padding: 10px 10px 10px 10px;
@@ -14,20 +14,16 @@
     </style>
 </head>
 <body>
-    <form action="saveUser.php" method="POST">
-    <label for="username">Username</label>
-    <input type="text" id="username" name="username">
+    <form action="saveForum.php" method="POST">
+    <label for="title">Forum Title</label>
+    <input type="text" id="title" name="title">
     <br>
 
-    <label for="password">Password&ThickSpace;</label>
-    <input type="password" id="password" name="password">
+    <label for="desc">Description</label>
+    <input type="text" id="desc" name="desc">
     <br>
 
-    <label for="email">Email&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;&ThickSpace;</label>
-    <input type="email" id="email" name="email">
-    <br>
-
-    <input type="submit" name="saveuser">
+    <input type="submit" name="saveforum">
     </form>
 </body>
 </html>
