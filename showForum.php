@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Show Users</title>
+    <title>Show forums</title>
 </head>
 <body>
     <?php
 
 require_once('db.php');
-require_once('usersAPI.php');
+require_once('forumsAPI.php');
 
-$users = tinyf_users_get();
+$forums = tinyf_forums_get();
 
-if($users == NULL)
+if($forums == NULL)
    die('Prblem');
-$ucount = @count($users);
+$fcount = @count($forums);
 
-if($ucount == 0)
-die('No users in database');
+if($fcount == 0)
+die('No forums in database');
     ?>
 
     
     <ul type="square">
     <?php
-    for($i = 0;$i<$ucount;$i++){
-        $user =$users[$i];
-        echo  "<li><a href='userProfil.php?id=$user->id'>$user->name </a> -- $user->email -- <a href='deleteUser.php?id=$user->id'>delete </a> -- <a href='modifyUser.php?id=$user->id'>update </a></li>";
+    for($i = 0;$i<$fcount;$i++){
+        $forum =$forums[$i];
+        echo  "<li><a href='forums.php?id=$forum->id'>$forum->title </a> <br> $forum->desc</li>";
     }
 
         
