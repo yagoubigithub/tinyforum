@@ -83,16 +83,16 @@ function tinyf_posts_add($fid, $pid, $uid,$title, $content)
     return true;
 }
 
-function tinyf_users_delete($uid)
+function tinyf_posts_delete_reply($pid)
 {
     global $tf_handle;
-    $id = (int)$uid;
+    $id = (int)$pid;
     if ($id == 0) {
         echo "is zero";
         return false;
 
     }
-    $query = sprintf("DELETE FROM `users` WHERE `id`= %d", $id);
+    $query = sprintf("DELETE FROM `posts` WHERE `pid`= %d", $id);
     $qresult = mysqli_query($tf_handle, $query);
     if (!$qresult) {
         echo "is null";
