@@ -46,7 +46,7 @@ function tinyf_forums_get_by_id($fid){
 function tinyf_forums_add($title,$desc){
     global $tf_handle;
     if((empty($title))  || (empty($desc)) ){
-        
+        echo "is empty";
         return false;
     }
 
@@ -55,10 +55,11 @@ function tinyf_forums_add($title,$desc){
     $n_title = mysqli_real_escape_string($tf_handle,strip_tags($title));
     $n_desc = mysqli_real_escape_string($tf_handle,strip_tags($desc));
     
-   $query  = sprintf("INSERT INTO `forums` VALUES (NULL,'%s','%s')",$n_title,$n_desc);
+   $query  = "INSERT INTO `forums` VALUES (NULL,'$n_title','$n_desc')";
+   
    $qresult = mysqli_query($tf_handle,$query);
+   
    if(!$qresult){
-     
     return false;
    }
       
