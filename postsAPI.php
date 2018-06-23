@@ -57,22 +57,22 @@ function tinyf_posts_get_reply_by_id()
     $post = $result[0];
     return $post;
 }
-function tinyf_posts_add($fid, $pid, $uid,$title, $content)
-{  
+function tinyf_posts_add($fid, $pid, $uid, $title, $content)
+{
     global $tf_handle;
 
     $_fid = (int)$fid;
     $_pid = (int)$pid;
     $_uid = (int)$uid;
-    if ($_fid == 0 ) //|| $$_uid == 0)
-        return false;
-    if ((empty($title)) || (empty($content)) ) {
+    if ($_fid == 0) //|| $$_uid == 0)
+    return false;
+    if ((empty($title)) || (empty($content))) {
         return false;
     }
     $n_title = mysqli_real_escape_string($tf_handle, strip_tags($title));
     $n_content = mysqli_real_escape_string($tf_handle, strip_tags($content));
-    
-    $query = sprintf("INSERT INTO `posts` VALUES (NULL,%d,%d,%d,'%s','%s')", $_fid, $_pid, $_uid, $n_title,$n_content);
+
+    $query = sprintf("INSERT INTO `posts` VALUES (NULL,%d,%d,%d,'%s','%s')", $_fid, $_pid, $_uid, $n_title, $n_content);
     $qresult = mysqli_query($tf_handle, $query);
     if (!$qresult) {
 
@@ -110,7 +110,7 @@ function tinyf_posts_delete($pid)
         return false;
 
     }
-    tinyf_posts_delete_reply($id);
+    tinyf_posts_delete_reply($pid);
     $query = sprintf("DELETE FROM `posts` WHERE `id`= %d", $id);
     $qresult = mysqli_query($tf_handle, $query);
     if (!$qresult) {
@@ -122,59 +122,59 @@ function tinyf_posts_delete($pid)
 }
 
 
-function tinyf_users_update($uid, $name = null, $password = null, $email = null, $isadmin = -1)
+function tinyf_posts_update($_id, $_fid = 0, $_pid = -1, $_uid = 0, $title = null, $content = null)
 {
     global $tf_handle;
-    $id = (int)$uid;
-    $n_isadmin = (int)$isadmin;
-    if ($id == 0) {
-        echo "is zero";
+    $id = (int)$_id;
+    $fid = (int)$_fid;
+    $pid = (int)$_pid;
+    $uid = (int)$_uid;
+
+    if ($id <= 0)
+        return false;
+    $post = tinyf_posts_get_by_id($id);
+    if (!$post) {
+        echo "no post with this id";
         return false;
     }
-    $user = tinyf_users_get_by_id($id);
-    if (!$user) {
-        echo "no user with this id";
-        return false;
-    }
-    if ((empty($name)) && (empty($password)) && (empty($email)) && ($user->isadmin == $n_isadmin)) {
+    if ((empty($title)) && (empty($content)) && $post->fid == $fid && $post->pid == $pid && $post->uid == $uid) {
         echo "is empty";
         return false;
     }
+
+    if ($post->pid == 0) {
+        if ($_fid <= 0) {
+            $_fid = $post->fid;
+        }
+        $_pid = 0;
+    } else {
+        $_fid = 0;
+        if ($_pid == 0) {
+            $_pid = $post->pid;
+        }
+    }
+    if ($_uid == 0) {
+        $_uid = $post->uid;
+    }
+
     $fields = array();
-    $query = 'UPDATE `users` SET ';
-    if (!empty($email)) {
-        $n_email = mysqli_real_escape_string($tf_handle, strip_tags($email));
-        if (!filter_var($n_email, FILTER_VALIDATE_EMAIL)) {
-            echo "email not valid";
-            return false;
-        }
-        $fields[count($fields)] = " `email` = '$n_email'";
-    }
-    if ((!empty($name))) {
-        $n_name = mysqli_real_escape_string($tf_handle, strip_tags($name));
-        $fields[count($fields)] = " `name` = '$n_name'";
-    }
-    if ((!empty($password))) {
-        $n_pass = md5(mysqli_real_escape_string($tf_handle, strip_tags($password)));
-        $fields[count($fields)] = " `password` = '$n_pass'";
-    }
-    if ($n_isadmin == -1) {
-        $n_isadmin = $user->isadmin;
-    }
-    $fields[count($fields)] = " `isadmin` = '$n_isadmin'";
+    $query = 'UPDATE `posts` SET ';
+    if (!empty($title)) {
+        $n_title = mysqli_real_escape_string($tf_handle, strip_tags($title));
 
+        $fields[count($fields)] = " `title` = '$n_title'";
+    }
+    if ((!empty($content))) {
+        $n_content = mysqli_real_escape_string($tf_handle, strip_tags($content));
+        $fields[count($fields)] = " `content` = '$n_content'";
+    }
+
+
+    $fields[count($fields)] = " `fid` = '$_fid'";
+    $fields[count($fields)] = " `pid` = '$_pid'";
+    $fields[count($fields)] = " `uid` = '$_uid'";
     $fcount = count($fields);
-    if ($fcount == 1) {
-        $query .= $fields[0] . " WHERE `id` = " . $id;
-        $qresult = mysqli_query($tf_handle, $query);
 
-        if (!$qresult) {
-
-            return false;
-        } else {
-            return true;
-        }
-    }
     for ($i = 0; $i < $fcount; $i++) {
         $query .= $fields[$i] . ' ';
         if ($i != ($fcount - 1)) {
