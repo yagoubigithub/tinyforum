@@ -101,6 +101,25 @@ function tinyf_posts_delete_reply($pid)
 
     return true;
 }
+function tinyf_posts_delete($pid)
+{
+    global $tf_handle;
+    $id = (int)$pid;
+    if ($id == 0) {
+        echo "is zero";
+        return false;
+
+    }
+    tinyf_posts_delete_reply($id);
+    $query = sprintf("DELETE FROM `posts` WHERE `id`= %d", $id);
+    $qresult = mysqli_query($tf_handle, $query);
+    if (!$qresult) {
+        echo "is null";
+        return false;
+    }
+
+    return true;
+}
 
 
 function tinyf_users_update($uid, $name = null, $password = null, $email = null, $isadmin = -1)
